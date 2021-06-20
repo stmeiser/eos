@@ -24,6 +24,7 @@
 #include "eos/reference.hh"
 #include "eos/signal-pdf.hh"
 #include "eos/utils/kinematic.hh"
+#include "eos/utils/log.hh"
 #include "eos/utils/model.hh"
 #include "eos/utils/parameters.hh"
 #include "eos/utils/options.hh"
@@ -124,6 +125,16 @@ namespace impl
     {
         PyErr_SetString(PyExc_RuntimeError, e.what());
     }
+
+    void logging_callback(PyObject * c, const std::string & id, const LogLevel & l, const std::string & m)
+    {
+        call<void>(c, id, l, m);
+    }
+
+    void register_callback(PyObject * c)
+    {
+        Log::instance()->register_callback(std::bind(&logging_callback, c, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
+    }
 }
 
 BOOST_PYTHON_MODULE(_eos)
@@ -137,6 +148,9 @@ BOOST_PYTHON_MODULE(_eos)
 
     // eos::Exception
     register_exception_translator<Exception>(&impl::translate_exception);
+
+    // provide access to the callback function
+    def("_register_callback", &impl::register_callback);
 
     // {{{ eos/utils
     // qnp::Prefix

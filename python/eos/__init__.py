@@ -27,6 +27,7 @@ except NameError:
     pass
 
 from _eos import *
+from _eos import _register_callback
 from .data import *
 from .plot import *
 from .analysis import Analysis, BestFitPoint
@@ -52,6 +53,11 @@ def info(msg, *args, **kwargs):
 
 def warn(msg, *args, **kwargs):
     logger.warn(msg, *args, **kwargs)
+
+def _log_callback(id, level, msg):
+    logger.info("{id} {level} {msg}".format(id=id, level=level, msg=msg))
+
+_register_callback(_log_callback)
 
 import time as _time
 import os as _os
