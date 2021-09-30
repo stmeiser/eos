@@ -79,6 +79,10 @@ namespace eos
 
         UsedParameter mu;
 
+        std::function<double (const double &)> m_U_msbar;
+        std::function<complex<double> ()> v_Ub;
+        std::function<WilsonCoefficients<ChargedCurrent> (const std::string &, bool)> wc;
+
         SwitchOption opt_int_points;
 
         int int_points;
@@ -166,6 +170,21 @@ namespace eos
             if (! form_factors.get())
                 throw InternalError("Form factors not found!");
 
+            using std::placeholders::_1;
+            using std::placeholders::_2;
+            if ('u' == opt_U.value()[0])
+            {
+                m_U_msbar = std::bind(&ModelComponent<components::QCD>::m_u_msbar, model.get(), _1);
+                v_Ub      = std::bind(&ModelComponent<components::CKM>::ckm_ub, model.get());
+                wc        = std::bind(&ModelComponent<components::DeltaBU1>::wilson_coefficients_b_to_u, model.get(), _1, _2);
+            }
+            else
+            {
+                m_U_msbar = std::bind(&ModelComponent<components::QCD>::m_c_msbar, model.get(), _1);
+                v_Ub      = std::bind(&ModelComponent<components::CKM>::ckm_cb, model.get());
+                wc        = std::bind(&ModelComponent<components::DeltaBC1>::wilson_coefficients_b_to_c, model.get(), _1, _2);
+            }
+
             u.uses(*form_factors);
             u.uses(*model);
         }
@@ -185,7 +204,7 @@ namespace eos
             b_to_vec_l_nu::Amplitudes result;
 
             // NP contributions in EFT including tensor operator cf. [DSD2014], p. 3
-            const WilsonCoefficients<ChargedCurrent> wc = model->wilson_coefficients_b_to_c(opt_l.value(), cp_conjugate);
+            const WilsonCoefficients<ChargedCurrent> wc = this->wc(opt_l.value(), cp_conjugate);
             const complex<double> gV_pl = wc.cvl() + wc.cvr();  // gV_pl = 1 + gV = 1 + VL + VR = cVL + cVR
             const complex<double> gV_mi = wc.cvl() - wc.cvr();  // gV_mi = 1 - gA = 1 + VL - VR = cVL - cVR
             const complex<double> gP = wc.csr() - wc.csl();
@@ -201,7 +220,7 @@ namespace eos
             const double tff3  = form_factors->t_3(q2);
             // running quark masses
             const double mbatmu = model->m_b_msbar(mu);
-            const double mcatmu = model->m_c_msbar(mu);
+            const double mcatmu = this->m_U_msbar(mu);
             const double lam      = lambda(m_B * m_B, m_V * m_V, q2);
             const double sqrt_lam = (lam > 0.0) ? std::sqrt(lam) : 0.0;
             const double sqrtq2 = std::sqrt(q2);
@@ -323,7 +342,7 @@ namespace eos
     double
     BToVectorLeptonNeutrino::differential_branching_ratio(const double & q2) const
     {
-        return _imp->differential_angular_observables(q2).normalized_decay_width() * std::norm(_imp->model->ckm_cb()) * _imp->tau_B / _imp->hbar;
+        return _imp->differential_angular_observables(q2).normalized_decay_width() * std::norm(_imp->v_Ub()) * _imp->tau_B / _imp->hbar;
     }
 
     double
@@ -441,7 +460,7 @@ namespace eos
     BToVectorLeptonNeutrino::integrated_CPave_branching_ratio(const double & q2_min, const double & q2_max) const
     {
        Save<bool> save(_imp->cp_conjugate, false);
-        
+
         auto   o = _imp->integrated_angular_observables(q2_min, q2_max);
         _imp->cp_conjugate = true;
         auto   o_c = _imp->integrated_angular_observables(q2_min, q2_max);
@@ -625,7 +644,7 @@ namespace eos
     BToVectorLeptonNeutrino::integrated_CPave_a_fb_leptonic(const double & q2_min, const double & q2_max) const
     {
         Save<bool> save(_imp->cp_conjugate, false);
-        
+
         auto   o = _imp->integrated_angular_observables(q2_min, q2_max);
         _imp->cp_conjugate = true;
         auto   o_c = _imp->integrated_angular_observables(q2_min, q2_max);
@@ -637,7 +656,7 @@ namespace eos
     BToVectorLeptonNeutrino::integrated_CPave_f_L(const double & q2_min, const double & q2_max) const
     {
         Save<bool> save(_imp->cp_conjugate, false);
-        
+
         auto   o = _imp->integrated_angular_observables(q2_min, q2_max);
         _imp->cp_conjugate = true;
         auto   o_c = _imp->integrated_angular_observables(q2_min, q2_max);
@@ -649,11 +668,11 @@ namespace eos
     BToVectorLeptonNeutrino::integrated_CPave_ftilde_L(const double & q2_min, const double & q2_max) const
     {
         Save<bool> save(_imp->cp_conjugate, false);
-        
+
         auto   o = _imp->integrated_angular_observables(q2_min, q2_max);
         _imp->cp_conjugate = true;
         auto   o_c = _imp->integrated_angular_observables(q2_min, q2_max);
-           
+
         return 1.0 / 3.0 - 3.0 / 4.0 * 16.0 / 9.0 * (o.vv2T() + o_c.vv2T() + o.vv20() / 2.0 + o_c.vv20() / 2.0) / (o.normalized_decay_width() + o_c.normalized_decay_width());
     }
 
@@ -698,13 +717,10 @@ namespace eos
     }
 
     double
-    BToVectorLeptonNeutrino::integrated_S3(const double & q2_min, const double & q2_max) const
+    BToVectorLeptonNeutrino::integrated_S3(const IntermediateResult * ir) const
     {
-        Save<bool> save(_imp->cp_conjugate, false);
-
-        auto   o = _imp->integrated_angular_observables(q2_min, q2_max);
-        _imp->cp_conjugate = true;
-        auto   o_c = _imp->integrated_angular_observables(q2_min, q2_max);
+        const auto & o   = ir->ao;
+        const auto & o_c = ir->ao_bar;
 
         return 3.0 / 4.0 * (o.vv4T() + o_c.vv4T()) / (o.normalized_decay_width() + o_c.normalized_decay_width());
     }
