@@ -1,6 +1,6 @@
 /* vim: set sw=4 sts=4 et foldmethod=syntax : */
 
-/*
+/* Copyright (c) 2021 Stefan Meiser
  * Copyright (c) 2010-2015, 2021 Danny van Dyk
  * Copyright (c) 2018 Ahmet Kokulu
  * Copyright (c) 2018 Christoph Bobeth
@@ -202,6 +202,37 @@ namespace eos
             virtual WilsonCoefficients<wc::SBNuNu> wet_sbnunu(const bool & cp_conjugate) const;
     };
 
+    template <> class SMComponent<components::CBSU>:
+        public virtual ModelComponent<components::CBSU>
+    {
+        private:
+            /* Weak decay parameters */
+            UsedParameter _G_Fermi__CBSU;
+
+            /* QCD parameters */
+            UsedParameter _alpha_s_Z__CBSU;
+            UsedParameter _mu_t__CBSU;
+            UsedParameter _mu_b__CBSU;
+            UsedParameter _mu_c__CBSU;
+
+            /* GSW parameters */
+            UsedParameter _sw2__CBSU;
+
+            /* Masses */
+            UsedParameter _m_t_pole__CBSU;
+            UsedParameter _m_Z__CBSU;
+
+            /* Matching scales */
+            UsedParameter _mu_0__CBSU;
+            UsedParameter _mu__CBSU;
+
+        public:
+            SMComponent(const Parameters &, ParameterUser &);
+
+            /* sbar b cbar u Wilson coefficients */
+            virtual WilsonCoefficients<wc::CBSU> wet_cbsu(const bool & cp_conjugate) const;
+    };
+
     class StandardModel :
         public Model,
         public SMComponent<components::CKM>,
@@ -210,7 +241,8 @@ namespace eos
         public SMComponent<components::DeltaBS1>,
         public SMComponent<components::WET::UBLNu>,
         public SMComponent<components::WET::CBLNu>,
-        public SMComponent<components::WET::SBNuNu>
+        public SMComponent<components::WET::SBNuNu>,
+        public SMComponent<components::WET::CBSU>
     {
         public:
             StandardModel(const Parameters &);

@@ -4,7 +4,7 @@
  * Copyright (c) 2010, 2011, 2012, 2013, 2014, 2015, 2017 Danny van Dyk
  * Copyright (c) 2018 Ahmet Kokulu
  * Copyright (c) 2018, 2021 Christoph Bobeth
- *
+ * Copyright (c) 2021 Stefan Meiser
  * This file is part of the EOS project. EOS is free software;
  * you can redistribute it and/or modify it under the terms of the GNU General
  * Public License version 2, as published by the Free Software Foundation.
@@ -928,6 +928,88 @@ namespace implementation
         return wc;
     }
 
+    SMComponent<components::WET::CBSU>::SMComponent(const Parameters & p, ParameterUser & u) :
+        _G_Fermi__CBSU(p["WET::G_Fermi"], u),
+        _alpha_s_Z__CBSU(p["QCD::alpha_s(MZ)"], u),
+        _mu_t__CBSU(p["QCD::mu_t"], u),
+        _mu_b__CBSU(p["QCD::mu_b"], u),
+        _mu_c__CBSU(p["QCD::mu_c"], u),
+        _sw2__CBSU(p["GSW::sin^2(theta)"], u),
+        _m_t_pole__CBSU(p["mass::t(pole)"], u),
+        _m_Z__CBSU(p["mass::Z"], u),
+        _mu_0__CBSU(p["cbsu::mu_0"], u),
+        _mu__CBSU(p["cbsu::mu"], u)
+    {
+    }
+
+    WilsonCoefficients<wc::CBSU>
+    SMComponent<components::WET::CBSU>::wet_cbsu(const bool & /*cp_conjugate*/) const
+    {
+        if (mu >= _mu_t__CBSU)
+            throw InternalError("SMComponent<components::CBSU>::wilson_coefficients_cbsu: Evolution to mu >= mu_t is illdefined!");
+
+        if (mu <= _mu_c__CBSU)
+            throw InternalError("SMComponent<components::CBSU>::wilson_coefficients_cbsu: Evolution to mu <= mu_c is not implemented!");
+
+        // only evolve the wilson coefficients for 5 active flavors
+        static const double nf    = 5.0;
+        static const auto & beta4 = QCD::beta_function_nf_4;
+        static const auto & beta5 = QCD::beta_function_nf_5;
+
+        // calculate all alpha_s values
+        const double alpha_s_mu_0 = QCD::alpha_s(_mu_0__CBSU, _alpha_s_Z__CBSU, _m_Z__CBSU, beta5);
+
+        double alpha_s = 0.0;
+        if (mu < _mu_b__CBSU)
+        {
+            alpha_s = QCD::alpha_s(_mu_b__CBSU, _alpha_s_Z__CBSU, _m_Z__CBSU, beta5);
+            alpha_s = QCD::alpha_s(mu, alpha_s, _mu_b__CBSU, beta4);
+        }
+        else
+        {
+            alpha_s = QCD::alpha_s(mu, _alpha_s_Z__CBSU, _m_Z__CBSU, beta5);
+        }
+
+        /*
+        * cf. [BBL:1995A], section V
+        */
+
+        // Number of colors
+        const double Nc      = 3.0;
+        // coefficients of QCD beta function
+        const double beta0 = (11.0 * Nc - 2.0 * nf) / 3.0;
+        const double beta1 = 34.0 / 3.0 * power_of<2>(Nc) - 10.0 / 3.0 * Nc * nf - 2.0 * nf * (power_of<2>(Nc) - 1.0) / (2.0 * Nc);
+        // anomalous mass dimension, eqs. (V.11) - (V.12), in the five-flavour scheme, NDR scheme
+        const double gamma0_p = 12.0 * (Nc - 1.0) / (2.0 * Nc);
+        const double gamma0_m = -12.0 * (Nc + 1.0) / (2.0 * Nc);
+        const double gamma1_p = (Nc - 1.0) / (2.0 * Nc) * (-21.0 + 57.0 / Nc - 19.0 / 3.0 * Nc + 4.0 / 3.0 * nf);
+        const double gamma1_m = (Nc + 1.0) / (2.0 * Nc) * (-21.0 - 57.0 / Nc + 19.0 / 3.0 * Nc - 4.0 / 3.0 * nf);
+
+        // coefficients in matching condition, eq. (V.13)
+        const double B_p =  (Nc - 1.0) / (2.0 * Nc) * 11.0;
+        const double B_m =  (Nc + 1.0) / (2.0 * Nc) * (-11.0);
+
+        // auxiallary quantities
+        const double d_p = gamma0_p / (2.0 * beta0);
+        const double d_m = gamma0_m / (2.0 * beta0);
+        const double J_p = d_p * beta1 / beta0 - gamma1_p / (2 * beta0);
+        const double J_m = d_m * beta1 / beta0 - gamma1_m / (2 * beta0);
+
+        // running of the Wilson coefficients as defined in eqs. (V.7) - (V.8)
+        const double z_p = (1.0 + alpha_s / (4.0 * M_PI) * J_p) * pow(alpha_s_mu_0 / alpha_s, d_p) * (1.0 + alpha_s_mu_0 / (4.0 * M_PI) * (B_p - J_p));
+        const double z_m = (1.0 + alpha_s / (4.0 * M_PI) * J_m) * pow(alpha_s_mu_0 / alpha_s, d_m) * (1.0 + alpha_s_mu_0 / (4.0 * M_PI) * (B_m - J_m));
+
+        // We use an effective Hamiltonian
+        //   H^eff = 4GF / sqrt(2) * conj(V_cb) *  V_us * sum_i=1^10 (C_i O_i + C_i' O_i')
+        WilsonCoefficients<wc::CBSU> wc;
+        wc._coefficients[0]  =  -1.0 / 9.0 * (2.0 * z_p - z_m);     //O1
+        wc._coefficients[1]  =  - (z_p + z_m) / 3.0;                  	//O2
+        wc._coefficients[2]  =  1.0 / 36.0 * (2.0 * z_p - z_m);    //O3
+        wc._coefficients[3]  =  (z_p + z_m) / 12.0;                     //O4
+
+        return wc;
+    }
+
     StandardModel::StandardModel(const Parameters & p) :
         SMComponent<components::CKM>(p, *this),
         SMComponent<components::QCD>(p, *this),
@@ -935,7 +1017,8 @@ namespace implementation
         SMComponent<components::DeltaBS1>(p, *this),
         SMComponent<components::WET::CBLNu>(p, *this),
         SMComponent<components::WET::UBLNu>(p, *this),
-        SMComponent<components::WET::SBNuNu>(p, *this)
+        SMComponent<components::WET::SBNuNu>(p, *this),
+        SMComponent<components::WET::CBSU>(p, *this)
     {
     }
 

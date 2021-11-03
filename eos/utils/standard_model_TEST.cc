@@ -508,3 +508,72 @@ class WilsonCoefficientsSBNuNuTest :
             }
         }
 } wilson_coefficients_sbnunu_test;
+
+class WilsonCoefficientsCBSUTest :
+    public TestCase
+{
+    public:
+        WilsonCoefficientsCBSUTest() :
+            TestCase("wilson_coefficients_cbsu_test")
+        {
+        }
+
+        virtual void run() const
+        {
+            /* Test for 5 active flavors, evolving from mu_0 = 80 GeV to mu = 4.2 GeV
+             * Reference values were calculated using the 2 loop running of the QCD coupling and using lambda_qcd = 208.3 MeV
+             * The discrepancy in the calculation of the Wilson coefficients compared to the reference values comes solely from the QCD running coupling.
+             * The implementation of the running for the reference values only included 2 loop running of the QCD coupling
+             */
+            {
+                static const double eps = 1e-2;
+                static const double mu = 4.2;
+
+                Parameters p = Parameters::Defaults();
+                p["cbsu::mu_0"] = 80.;
+                StandardModel model(p);
+
+                WilsonCoefficients<wc::CBSU> wc = model.wilson_coefficients_cbsu(mu);
+                TEST_CHECK_NEARLY_EQUAL(-0.057765246, real(wc.c1()),   eps);
+                TEST_CHECK_NEARLY_EQUAL( 0.000000000, imag(wc.c1()),   eps);
+                TEST_CHECK_NEARLY_EQUAL(-0.720196686, real(wc.c2()),   eps);
+                TEST_CHECK_NEARLY_EQUAL( 0.000000000, imag(wc.c2()),   eps);
+                TEST_CHECK_NEARLY_EQUAL( 0.014441311, real(wc.c3()),   eps);
+                TEST_CHECK_NEARLY_EQUAL( 0.000000000, imag(wc.c3()),   eps);
+                TEST_CHECK_NEARLY_EQUAL( 0.180049171, real(wc.c4()),   eps);
+                TEST_CHECK_NEARLY_EQUAL( 0.000000000, imag(wc.c4()),   eps);
+                TEST_CHECK_NEARLY_EQUAL( 0.000000000, real(wc.c5()),   eps);
+                TEST_CHECK_NEARLY_EQUAL( 0.000000000, imag(wc.c5()),   eps);
+                TEST_CHECK_NEARLY_EQUAL( 0.000000000, real(wc.c6()),   eps);
+                TEST_CHECK_NEARLY_EQUAL( 0.000000000, imag(wc.c6()),   eps);
+                TEST_CHECK_NEARLY_EQUAL( 0.000000000, real(wc.c7()),   eps);
+                TEST_CHECK_NEARLY_EQUAL( 0.000000000, imag(wc.c7()),   eps);
+                TEST_CHECK_NEARLY_EQUAL( 0.000000000, real(wc.c8()),   eps);
+                TEST_CHECK_NEARLY_EQUAL( 0.000000000, imag(wc.c8()),   eps);
+                TEST_CHECK_NEARLY_EQUAL( 0.000000000, real(wc.c9()),   eps);
+                TEST_CHECK_NEARLY_EQUAL( 0.000000000, imag(wc.c9()),   eps);
+                TEST_CHECK_NEARLY_EQUAL( 0.000000000, real(wc.c10()),  eps);
+                TEST_CHECK_NEARLY_EQUAL( 0.000000000, imag(wc.c10()),  eps);
+                TEST_CHECK_NEARLY_EQUAL( 0.000000000, real(wc.c1p()),   eps);
+                TEST_CHECK_NEARLY_EQUAL( 0.000000000, imag(wc.c1p()),   eps);
+                TEST_CHECK_NEARLY_EQUAL( 0.000000000, real(wc.c2p()),   eps);
+                TEST_CHECK_NEARLY_EQUAL( 0.000000000, imag(wc.c2p()),   eps);
+                TEST_CHECK_NEARLY_EQUAL( 0.000000000, real(wc.c3p()),   eps);
+                TEST_CHECK_NEARLY_EQUAL( 0.000000000, imag(wc.c3p()),   eps);
+                TEST_CHECK_NEARLY_EQUAL( 0.000000000, real(wc.c4p()),   eps);
+                TEST_CHECK_NEARLY_EQUAL( 0.000000000, imag(wc.c4p()),   eps);
+                TEST_CHECK_NEARLY_EQUAL( 0.000000000, real(wc.c5p()),   eps);
+                TEST_CHECK_NEARLY_EQUAL( 0.000000000, imag(wc.c5p()),   eps);
+                TEST_CHECK_NEARLY_EQUAL( 0.000000000, real(wc.c6p()),   eps);
+                TEST_CHECK_NEARLY_EQUAL( 0.000000000, imag(wc.c6p()),   eps);
+                TEST_CHECK_NEARLY_EQUAL( 0.000000000, real(wc.c7p()),   eps);
+                TEST_CHECK_NEARLY_EQUAL( 0.000000000, imag(wc.c7p()),   eps);
+                TEST_CHECK_NEARLY_EQUAL( 0.000000000, real(wc.c8p()),   eps);
+                TEST_CHECK_NEARLY_EQUAL( 0.000000000, imag(wc.c8p()),   eps);
+                TEST_CHECK_NEARLY_EQUAL( 0.000000000, real(wc.c9p()),   eps);
+                TEST_CHECK_NEARLY_EQUAL( 0.000000000, imag(wc.c9p()),   eps);
+                TEST_CHECK_NEARLY_EQUAL( 0.000000000, real(wc.c10p()),  eps);
+                TEST_CHECK_NEARLY_EQUAL( 0.000000000, imag(wc.c10p()),  eps);
+            }
+        }
+} wilson_coefficients_cbsu_test;

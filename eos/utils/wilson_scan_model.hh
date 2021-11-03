@@ -265,6 +265,60 @@ namespace eos
             virtual WilsonCoefficients<wc::SBNuNu> wet_sbnunu(const bool & cp_conjugate) const;
     };
 
+    template <>
+    class WilsonScanComponent<components::CBSU> :
+        public virtual ModelComponent<components::CBSU>
+    {
+        protected:
+            /* b->s c u Wilson coefficients */
+            UsedParameter _re_cbsu_c1__CBSU;
+            UsedParameter _im_cbsu_c1__CBSU;
+            UsedParameter _re_cbsu_c2__CBSU;
+            UsedParameter _im_cbsu_c2__CBSU;
+            UsedParameter _re_cbsu_c3__CBSU;
+            UsedParameter _im_cbsu_c3__CBSU;
+            UsedParameter _re_cbsu_c4__CBSU;
+            UsedParameter _im_cbsu_c4__CBSU;
+            UsedParameter _re_cbsu_c5__CBSU;
+            UsedParameter _im_cbsu_c5__CBSU;
+            UsedParameter _re_cbsu_c6__CBSU;
+            UsedParameter _im_cbsu_c6__CBSU;
+            UsedParameter _re_cbsu_c7__CBSU;
+            UsedParameter _im_cbsu_c7__CBSU;
+            UsedParameter _re_cbsu_c8__CBSU;
+            UsedParameter _im_cbsu_c8__CBSU;
+            UsedParameter _re_cbsu_c9__CBSU;
+            UsedParameter _im_cbsu_c9__CBSU;
+            UsedParameter _re_cbsu_c10__CBSU;
+            UsedParameter _im_cbsu_c10__CBSU;
+            UsedParameter _re_cbsu_c1p__CBSU;
+            UsedParameter _im_cbsu_c1p__CBSU;
+            UsedParameter _re_cbsu_c2p__CBSU;
+            UsedParameter _im_cbsu_c2p__CBSU;
+            UsedParameter _re_cbsu_c3p__CBSU;
+            UsedParameter _im_cbsu_c3p__CBSU;
+            UsedParameter _re_cbsu_c4p__CBSU;
+            UsedParameter _im_cbsu_c4p__CBSU;
+            UsedParameter _re_cbsu_c5p__CBSU;
+            UsedParameter _im_cbsu_c5p__CBSU;
+            UsedParameter _re_cbsu_c6p__CBSU;
+            UsedParameter _im_cbsu_c6p__CBSU;
+            UsedParameter _re_cbsu_c7p__CBSU;
+            UsedParameter _im_cbsu_c7p__CBSU;
+            UsedParameter _re_cbsu_c8p__CBSU;
+            UsedParameter _im_cbsu_c8p__CBSU;
+            UsedParameter _re_cbsu_c9p__CBSU;
+            UsedParameter _im_cbsu_c9p__CBSU;
+            UsedParameter _re_cbsu_c10p__CBSU;
+            UsedParameter _im_cbsu_c10p__CBSU;
+
+        public:
+            WilsonScanComponent(const Parameters &, const Options &, ParameterUser &);
+
+            /*! cbar b sbar u Wilson coefficients */
+            virtual WilsonCoefficients<wc::CBSU> wilson_coefficients_cbsu(const double & mu) const;
+    };
+
     /*!
      * A model with all possible operators; their Wilson coefficients
      * are allowed to have arbitrary values.
@@ -277,7 +331,8 @@ namespace eos
         public WilsonScanComponent<components::DeltaBS1>,
         public WilsonScanComponent<components::WET::UBLNu>,
         public WilsonScanComponent<components::WET::CBLNu>,
-        public WilsonScanComponent<components::WET::SBNuNu>
+        public WilsonScanComponent<components::WET::SBNuNu>,
+        public WilsonScanComponent<components::WET::CBSU>
     {
         public:
             WilsonScanModel(const Parameters &, const Options &);
@@ -308,7 +363,8 @@ namespace eos
         public ConstrainedWilsonScanComponent,
         public WilsonScanComponent<components::WET::UBLNu>,
         public WilsonScanComponent<components::WET::CBLNu>,
-        public WilsonScanComponent<components::WET::SBNuNu>
+        public WilsonScanComponent<components::WET::SBNuNu>,
+        public WilsonScanComponent<components::WET::CBSU>
     {
         public:
             ConstrainedWilsonScanModel(const Parameters &, const Options &);

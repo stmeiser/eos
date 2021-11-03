@@ -525,6 +525,82 @@ namespace eos
         u.drop(_mu_re_cT5.id());     u.drop(_mu_im_cT5.id());
     }
 
+    /* cbar b sbar u Wilson coefficients */
+    WilsonScanComponent<components::CBSU>::WilsonScanComponent(const Parameters & p, const Options &, ParameterUser & u) :
+        _re_cbsu_c1__CBSU(p["cbsu::Re{c1}"], u),
+        _im_cbsu_c1__CBSU(p["cbsu::Im{c1}"], u),
+        _re_cbsu_c2__CBSU(p["cbsu::Re{c2}"], u),
+        _im_cbsu_c2__CBSU(p["cbsu::Im{c2}"], u),
+        _re_cbsu_c3__CBSU(p["cbsu::Re{c3}"], u),
+        _im_cbsu_c3__CBSU(p["cbsu::Im{c3}"], u),
+        _re_cbsu_c4__CBSU(p["cbsu::Re{c4}"], u),
+        _im_cbsu_c4__CBSU(p["cbsu::Im{c4}"], u),
+        _re_cbsu_c5__CBSU(p["cbsu::Re{c5}"], u),
+        _im_cbsu_c5__CBSU(p["cbsu::Im{c5}"], u),
+        _re_cbsu_c6__CBSU(p["cbsu::Re{c6}"], u),
+        _im_cbsu_c6__CBSU(p["cbsu::Im{c6}"], u),
+        _re_cbsu_c7__CBSU(p["cbsu::Re{c7}"], u),
+        _im_cbsu_c7__CBSU(p["cbsu::Im{c7}"], u),
+        _re_cbsu_c8__CBSU(p["cbsu::Re{c8}"], u),
+        _im_cbsu_c8__CBSU(p["cbsu::Im{c8}"], u),
+        _re_cbsu_c9__CBSU(p["cbsu::Re{c9}"], u),
+        _im_cbsu_c9__CBSU(p["cbsu::Im{c9}"], u),
+        _re_cbsu_c10__CBSU(p["cbsu::Re{c10}"], u),
+        _im_cbsu_c10__CBSU(p["cbsu::Im{c10}"], u),
+        _re_cbsu_c1p__CBSU(p["cbsu::Re{c1'}"], u),
+        _im_cbsu_c1p__CBSU(p["cbsu::Im{c1'}"], u),
+        _re_cbsu_c2p__CBSU(p["cbsu::Re{c2'}"], u),
+        _im_cbsu_c2p__CBSU(p["cbsu::Im{c2'}"], u),
+        _re_cbsu_c3p__CBSU(p["cbsu::Re{c3'}"], u),
+        _im_cbsu_c3p__CBSU(p["cbsu::Im{c3'}"], u),
+        _re_cbsu_c4p__CBSU(p["cbsu::Re{c4'}"], u),
+        _im_cbsu_c4p__CBSU(p["cbsu::Im{c4'}"], u),
+        _re_cbsu_c5p__CBSU(p["cbsu::Re{c5'}"], u),
+        _im_cbsu_c5p__CBSU(p["cbsu::Im{c5'}"], u),
+        _re_cbsu_c6p__CBSU(p["cbsu::Re{c6'}"], u),
+        _im_cbsu_c6p__CBSU(p["cbsu::Im{c6'}"], u),
+        _re_cbsu_c7p__CBSU(p["cbsu::Re{c7'}"], u),
+        _im_cbsu_c7p__CBSU(p["cbsu::Im{c7'}"], u),
+        _re_cbsu_c8p__CBSU(p["cbsu::Re{c8'}"], u),
+        _im_cbsu_c8p__CBSU(p["cbsu::Im{c8'}"], u),
+        _re_cbsu_c9p__CBSU(p["cbsu::Re{c9'}"], u),
+        _im_cbsu_c9p__CBSU(p["cbsu::Im{c9'}"], u),
+        _re_cbsu_c10p__CBSU(p["cbsu::Re{c10'}"], u),
+        _im_cbsu_c10p__CBSU(p["cbsu::Im{c10'}"], u)
+    {
+    }
+
+    WilsonCoefficients<wc::CBSU>
+    WilsonScanComponent<components::CBSU>::wilson_coefficients_cbsu(const double & mu) const
+    {
+        WilsonCoefficients<wc::CBSU> result;
+
+        result._coefficients = std::array<complex<double>, 20>{{
+            complex<double>(_re_cbsu_c1__CBSU(),  _im_cbsu_c1__CBSU()),
+            complex<double>(_re_cbsu_c2__CBSU(),  _im_cbsu_c2__CBSU()),
+            complex<double>(_re_cbsu_c3__CBSU(),  _im_cbsu_c3__CBSU()),
+            complex<double>(_re_cbsu_c4__CBSU(),  _im_cbsu_c4__CBSU()),
+            complex<double>(_re_cbsu_c5__CBSU(),  _im_cbsu_c5__CBSU()),
+            complex<double>(_re_cbsu_c6__CBSU(),  _im_cbsu_c6__CBSU()),
+            complex<double>(_re_cbsu_c7__CBSU(),  _im_cbsu_c7__CBSU()),
+            complex<double>(_re_cbsu_c8__CBSU(),  _im_cbsu_c8__CBSU()),
+            complex<double>(_re_cbsu_c9__CBSU(),  _im_cbsu_c9__CBSU()),
+            complex<double>(_re_cbsu_c10__CBSU(), _im_cbsu_c10__CBSU()),
+            complex<double>(_re_cbsu_c1p__CBSU(), _im_cbsu_c1p__CBSU()),
+            complex<double>(_re_cbsu_c2p__CBSU(), _im_cbsu_c2p__CBSU()),
+            complex<double>(_re_cbsu_c3p__CBSU(), _im_cbsu_c3p__CBSU()),
+            complex<double>(_re_cbsu_c4p__CBSU(), _im_cbsu_c4p__CBSU()),
+            complex<double>(_re_cbsu_c5p__CBSU(), _im_cbsu_c5p__CBSU()),
+            complex<double>(_re_cbsu_c6p__CBSU(), _im_cbsu_c6p__CBSU()),
+            complex<double>(_re_cbsu_c7p__CBSU(), _im_cbsu_c7p__CBSU()),
+            complex<double>(_re_cbsu_c8p__CBSU(), _im_cbsu_c8p__CBSU()),
+            complex<double>(_re_cbsu_c9p__CBSU(), _im_cbsu_c9p__CBSU()),
+            complex<double>(_re_cbsu_c10p__CBSU(), _im_cbsu_c10p__CBSU())
+        }};
+
+        return result;
+    }
+
     WilsonScanModel::WilsonScanModel(const Parameters & parameters, const Options & options) :
         CKMScanComponent(parameters, options, *this),
         SMComponent<components::QCD>(parameters, *this),
@@ -532,7 +608,8 @@ namespace eos
         WilsonScanComponent<components::DeltaBS1>(parameters, options, *this),
         WilsonScanComponent<components::WET::UBLNu>(parameters, options, *this),
         WilsonScanComponent<components::WET::CBLNu>(parameters, options, *this),
-        WilsonScanComponent<components::WET::SBNuNu>(parameters, options, *this)
+        WilsonScanComponent<components::WET::SBNuNu>(parameters, options, *this),
+        WilsonScanComponent<components::WET::CBSU>(parameters, options, *this)
     {
     }
 
@@ -553,7 +630,8 @@ namespace eos
         ConstrainedWilsonScanComponent(parameters, options, *this),
         WilsonScanComponent<components::WET::UBLNu>(parameters, options, *this),
         WilsonScanComponent<components::WET::CBLNu>(parameters, options, *this),
-        WilsonScanComponent<components::WET::SBNuNu>(parameters, options, *this)
+        WilsonScanComponent<components::WET::SBNuNu>(parameters, options, *this),
+        WilsonScanComponent<components::CBSU>(parameters, options, *this)
     {
     }
 

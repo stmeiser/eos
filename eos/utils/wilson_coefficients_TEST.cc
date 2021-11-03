@@ -22,6 +22,7 @@
 #include <eos/utils/power_of.hh>
 #include <eos/utils/top-loops.hh>
 #include <eos/utils/wilson_coefficients.hh>
+#include <eos/utils/wilson_scan_model.hh>
 
 #include <cmath>
 #include <iostream>
@@ -161,3 +162,88 @@ class WilsonCoefficientsTest :
             }
         }
 } wilson_coefficients_test;
+
+class BernMvDTrafoTest :
+    public TestCase
+{
+    public:
+        BernMvDTrafoTest() :
+            TestCase("bern_mvd_trafo_test")
+        {
+        }
+
+        virtual void run() const
+        {
+
+            {
+                static const double eps = 1e-8;
+
+                Parameters p = Parameters::Defaults();
+                WilsonScanModel model(p, Options());
+                p["cbsu::Re{c1}"] = 1.0;
+                p["cbsu::Re{c2}"] = 2.0;
+                p["cbsu::Re{c3}"] = 3.0;
+                p["cbsu::Re{c4}"] = 4.0;
+                p["cbsu::Re{c5}"] = 5.0;
+                p["cbsu::Re{c6}"] = 6.0;
+                p["cbsu::Re{c7}"] = 7.0;
+                p["cbsu::Re{c8}"] = 8.0;
+                p["cbsu::Re{c9}"] = 9.0;
+                p["cbsu::Re{c10}"] = 10.0;
+                p["cbsu::Re{c1'}"] = 11.0;
+                p["cbsu::Re{c2'}"] = 12.0;
+                p["cbsu::Re{c3'}"] = 13.0;
+                p["cbsu::Re{c4'}"] = 14.0;
+                p["cbsu::Re{c5'}"] = 15.0;
+                p["cbsu::Re{c6'}"] = 16.0;
+                p["cbsu::Re{c7'}"] = 17.0;
+                p["cbsu::Re{c8'}"] = 18.0;
+                p["cbsu::Re{c9'}"] = 19.0;
+                p["cbsu::Re{c10'}"] = 20.0;
+
+                WilsonCoefficients<wc::CBSU> wc = model.wilson_coefficients_cbsu(4.2);
+
+                std::array<complex<double>, 20> wc_MvD = wc.convertToMvD();
+                TEST_CHECK_RELATIVE_ERROR( std::real(wc_MvD[0]), +1198.000000, eps);
+                TEST_CHECK_RELATIVE_ERROR( std::real(wc_MvD[2]), -525.0000000, eps);
+                TEST_CHECK_RELATIVE_ERROR( std::real(wc_MvD[1]), -369.4444444, eps);
+                TEST_CHECK_RELATIVE_ERROR( std::real(wc_MvD[3]), +1452.222222, eps);
+                TEST_CHECK_RELATIVE_ERROR( std::real(wc_MvD[4]), +34.00000000, eps);
+                TEST_CHECK_RELATIVE_ERROR( std::real(wc_MvD[5]), +66.11111111, eps);
+                TEST_CHECK_RELATIVE_ERROR( std::real(wc_MvD[6]), +198.3333333, eps);
+                TEST_CHECK_RELATIVE_ERROR( std::real(wc_MvD[7]), +413.1111111, eps);
+                TEST_CHECK_RELATIVE_ERROR( std::real(wc_MvD[8]), -709.8888889, eps);
+                TEST_CHECK_RELATIVE_ERROR( std::real(wc_MvD[9]), +243.0555556, eps);
+                TEST_CHECK_RELATIVE_ERROR( std::real(wc_MvD[10]), +2445.000000, eps);
+                TEST_CHECK_RELATIVE_ERROR( std::real(wc_MvD[11]), -791.6666667, eps);
+                TEST_CHECK_RELATIVE_ERROR( std::real(wc_MvD[12]), -1125.000000, eps);
+                TEST_CHECK_RELATIVE_ERROR( std::real(wc_MvD[13]), +2938.333333, eps);
+                TEST_CHECK_RELATIVE_ERROR( std::real(wc_MvD[14]), +51.00000000, eps);
+                TEST_CHECK_RELATIVE_ERROR( std::real(wc_MvD[15]), +141.6666667, eps);
+                TEST_CHECK_RELATIVE_ERROR( std::real(wc_MvD[16]), +425.0000000, eps);
+                TEST_CHECK_RELATIVE_ERROR( std::real(wc_MvD[17]), +819.6666667, eps);
+                TEST_CHECK_RELATIVE_ERROR( std::real(wc_MvD[18]), -1440.833333, eps);
+                TEST_CHECK_RELATIVE_ERROR( std::real(wc_MvD[19]), +520.8333333, eps);
+                TEST_CHECK_NEARLY_EQUAL( std::imag(wc_MvD[0]), 0.0, eps);
+                TEST_CHECK_NEARLY_EQUAL( std::imag(wc_MvD[1]), 0.0, eps);
+                TEST_CHECK_NEARLY_EQUAL( std::imag(wc_MvD[2]), 0.0, eps);
+                TEST_CHECK_NEARLY_EQUAL( std::imag(wc_MvD[3]), 0.0, eps);
+                TEST_CHECK_NEARLY_EQUAL( std::imag(wc_MvD[4]), 0.0, eps);
+                TEST_CHECK_NEARLY_EQUAL( std::imag(wc_MvD[5]), 0.0, eps);
+                TEST_CHECK_NEARLY_EQUAL( std::imag(wc_MvD[6]), 0.0, eps);
+                TEST_CHECK_NEARLY_EQUAL( std::imag(wc_MvD[7]), 0.0, eps);
+                TEST_CHECK_NEARLY_EQUAL( std::imag(wc_MvD[8]), 0.0, eps);
+                TEST_CHECK_NEARLY_EQUAL( std::imag(wc_MvD[9]), 0.0, eps);
+                TEST_CHECK_NEARLY_EQUAL( std::imag(wc_MvD[10]), 0.0, eps);
+                TEST_CHECK_NEARLY_EQUAL( std::imag(wc_MvD[11]), 0.0, eps);
+                TEST_CHECK_NEARLY_EQUAL( std::imag(wc_MvD[12]), 0.0, eps);
+                TEST_CHECK_NEARLY_EQUAL( std::imag(wc_MvD[13]), 0.0, eps);
+                TEST_CHECK_NEARLY_EQUAL( std::imag(wc_MvD[14]), 0.0, eps);
+                TEST_CHECK_NEARLY_EQUAL( std::imag(wc_MvD[15]), 0.0, eps);
+                TEST_CHECK_NEARLY_EQUAL( std::imag(wc_MvD[16]), 0.0, eps);
+                TEST_CHECK_NEARLY_EQUAL( std::imag(wc_MvD[17]), 0.0, eps);
+                TEST_CHECK_NEARLY_EQUAL( std::imag(wc_MvD[18]), 0.0, eps);
+                TEST_CHECK_NEARLY_EQUAL( std::imag(wc_MvD[19]), 0.0, eps);
+            }
+        }
+} bern_mvd_trafo_test;

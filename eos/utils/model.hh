@@ -49,6 +49,7 @@ namespace eos
             struct CBLNu;
             struct UBLNu;
             struct SBNuNu;
+            struct CBSU;
         }
         struct DeltaBS1;
         ///@}
@@ -151,6 +152,16 @@ namespace eos
     };
 
     /*!
+     * Base class for the Delta U = Delta C = 1 = -Delta B = - Delta S  CC component of models.
+     */
+    template <> class ModelComponent<components::WET::CBSU>
+    {
+        public:
+            /* cbar b sbar u Wilson coefficients */
+            virtual WilsonCoefficients<wc::CBSU> wet_cbsu(const bool & cp_conjguate = false) const = 0;
+    };
+
+    /*!
      * Base class for all models.
      */
     class Model :
@@ -161,7 +172,8 @@ namespace eos
         public virtual ModelComponent<components::DeltaBS1>,
         public virtual ModelComponent<components::WET::UBLNu>,
         public virtual ModelComponent<components::WET::CBLNu>,
-        public virtual ModelComponent<components::WET::SBNuNu>
+        public virtual ModelComponent<components::WET::SBNuNu>,
+        public virtual ModelComponent<components::WET::CBSU>
     {
         public:
             virtual ~Model() = 0;

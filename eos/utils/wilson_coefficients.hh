@@ -1,6 +1,7 @@
 /* vim: set sw=4 sts=4 et foldmethod=syntax : */
 
 /*
+ * Copyright (c) 2021 Stefan Meiser
  * Copyright (c) 2010, 2011, 2013, 2015, 2021 Danny van Dyk
  * Copyright (c) 2014 Frederik Beaujean
  * Copyright (c) 2014 Christoph Bobeth
@@ -127,6 +128,7 @@ namespace eos
     {
         struct SBSB {};
         struct SBNuNu {};
+        struct CBSU {};
     }
 
     /* Wilson coefficients for |Delta B| = |Delta S| = 2 operators */
@@ -184,6 +186,64 @@ namespace eos
 
         inline complex<double> cL()   const { return _coefficients[0]; }
         inline complex<double> cR()   const { return _coefficients[1]; }
+    };
+
+    /* Wilson coefficients for |Delta B| = |Delta C| = |Delta S| = 1 operators */
+    template <> struct WilsonCoefficients<wc::CBSU>
+    {
+        /*
+         * The twenty operators are defined as in [AFGV:2017A], eq. (2.6), p. 7 with the flavor content bar{s} b bar{c} u
+         *
+         * C++ idx -> operator
+         * 0       -> O1
+         * 1       -> O2
+         * 2       -> O3
+         * 3       -> O4
+         * 4       -> O5
+         * 5       -> O6
+         * 6       -> O7
+         * 7       -> O8
+         * 8       -> O9
+         * 9       -> O10
+         * 10      -> O1'
+         * 11      -> O2'
+         * 12      -> O3'
+         * 13      -> O4'
+         * 14      -> O5'
+         * 15      -> O6'
+         * 16      -> O7'
+         * 17      -> O8'
+         * 18      -> O9'
+         * 19      -> O10'
+         */
+        std::array<complex<double>, 20> _coefficients;
+
+        /*! Default ctor */
+        WilsonCoefficients();
+
+        // AFGV basis
+        inline complex<double> c1()   const { return _coefficients[0]; }
+        inline complex<double> c2()   const { return _coefficients[1]; }
+        inline complex<double> c3()   const { return _coefficients[2]; }
+        inline complex<double> c4()   const { return _coefficients[3]; }
+        inline complex<double> c5()   const { return _coefficients[4]; }
+        inline complex<double> c6()   const { return _coefficients[5]; }
+        inline complex<double> c7()   const { return _coefficients[6]; }
+        inline complex<double> c8()   const { return _coefficients[7]; }
+        inline complex<double> c9()   const { return _coefficients[8]; }
+        inline complex<double> c10()  const { return _coefficients[9]; }
+        inline complex<double> c1p()  const { return _coefficients[10]; }
+        inline complex<double> c2p()  const { return _coefficients[11]; }
+        inline complex<double> c3p()  const { return _coefficients[12]; }
+        inline complex<double> c4p()  const { return _coefficients[13]; }
+        inline complex<double> c5p()  const { return _coefficients[14]; }
+        inline complex<double> c6p()  const { return _coefficients[15]; }
+        inline complex<double> c7p()  const { return _coefficients[16]; }
+        inline complex<double> c8p()  const { return _coefficients[17]; }
+        inline complex<double> c9p()  const { return _coefficients[18]; }
+        inline complex<double> c10p() const { return _coefficients[19]; }
+
+        std::array<complex<double>, 20> convertToMvD();
     };
 }
 
