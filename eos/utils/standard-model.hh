@@ -202,8 +202,8 @@ namespace eos
             virtual WilsonCoefficients<wc::SBNuNu> wet_sbnunu(const bool & cp_conjugate) const;
     };
 
-    template <> class SMComponent<components::CBSU>:
-        public virtual ModelComponent<components::CBSU>
+    template <> class SMComponent<components::WET::CBSU>:
+        public virtual ModelComponent<components::WET::CBSU>
     {
         private:
             /* Weak decay parameters */

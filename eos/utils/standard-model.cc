@@ -945,10 +945,10 @@ namespace implementation
     WilsonCoefficients<wc::CBSU>
     SMComponent<components::WET::CBSU>::wet_cbsu(const bool & /*cp_conjugate*/) const
     {
-        if (mu >= _mu_t__CBSU)
+        if (_mu__CBSU >= _mu_t__CBSU)
             throw InternalError("SMComponent<components::CBSU>::wilson_coefficients_cbsu: Evolution to mu >= mu_t is illdefined!");
 
-        if (mu <= _mu_c__CBSU)
+        if (_mu__CBSU <= _mu_c__CBSU)
             throw InternalError("SMComponent<components::CBSU>::wilson_coefficients_cbsu: Evolution to mu <= mu_c is not implemented!");
 
         // only evolve the wilson coefficients for 5 active flavors
@@ -960,14 +960,14 @@ namespace implementation
         const double alpha_s_mu_0 = QCD::alpha_s(_mu_0__CBSU, _alpha_s_Z__CBSU, _m_Z__CBSU, beta5);
 
         double alpha_s = 0.0;
-        if (mu < _mu_b__CBSU)
+        if (_mu__CBSU < _mu_b__CBSU)
         {
             alpha_s = QCD::alpha_s(_mu_b__CBSU, _alpha_s_Z__CBSU, _m_Z__CBSU, beta5);
-            alpha_s = QCD::alpha_s(mu, alpha_s, _mu_b__CBSU, beta4);
+            alpha_s = QCD::alpha_s(_mu__CBSU, alpha_s, _mu_b__CBSU, beta4);
         }
         else
         {
-            alpha_s = QCD::alpha_s(mu, _alpha_s_Z__CBSU, _m_Z__CBSU, beta5);
+            alpha_s = QCD::alpha_s(_mu__CBSU, _alpha_s_Z__CBSU, _m_Z__CBSU, beta5);
         }
 
         /*
@@ -1002,10 +1002,10 @@ namespace implementation
         // We use an effective Hamiltonian
         //   H^eff = 4GF / sqrt(2) * conj(V_cb) *  V_us * sum_i=1^10 (C_i O_i + C_i' O_i')
         WilsonCoefficients<wc::CBSU> wc;
-        wc._coefficients[0]  =  -1.0 / 9.0 * (2.0 * z_p - z_m);     //O1
-        wc._coefficients[1]  =  - (z_p + z_m) / 3.0;                  	//O2
-        wc._coefficients[2]  =  1.0 / 36.0 * (2.0 * z_p - z_m);    //O3
-        wc._coefficients[3]  =  (z_p + z_m) / 12.0;                     //O4
+        wc._coefficients[0]  =  -1.0 / 9.0 * (2.0 * z_p - z_m);         //O1
+        wc._coefficients[1]  =  -(z_p + z_m) / 3.0;                  	//O2
+        wc._coefficients[2]  =  1.0 / 36.0 * (2.0 * z_p - z_m);         //O3
+        wc._coefficients[3]  =  +(z_p + z_m) / 12.0;                    //O4
 
         return wc;
     }

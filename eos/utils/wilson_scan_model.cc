@@ -526,7 +526,7 @@ namespace eos
     }
 
     /* cbar b sbar u Wilson coefficients */
-    WilsonScanComponent<components::CBSU>::WilsonScanComponent(const Parameters & p, const Options &, ParameterUser & u) :
+    WilsonScanComponent<components::WET::CBSU>::WilsonScanComponent(const Parameters & p, const Options &, ParameterUser & u) :
         _re_cbsu_c1__CBSU(p["cbsu::Re{c1}"], u),
         _im_cbsu_c1__CBSU(p["cbsu::Im{c1}"], u),
         _re_cbsu_c2__CBSU(p["cbsu::Re{c2}"], u),
@@ -571,7 +571,7 @@ namespace eos
     }
 
     WilsonCoefficients<wc::CBSU>
-    WilsonScanComponent<components::CBSU>::wilson_coefficients_cbsu(const double & mu) const
+    WilsonScanComponent<components::WET::CBSU>::wilson_coefficients_cbsu(const double & mu) const
     {
         WilsonCoefficients<wc::CBSU> result;
 
@@ -631,7 +631,7 @@ namespace eos
         WilsonScanComponent<components::WET::UBLNu>(parameters, options, *this),
         WilsonScanComponent<components::WET::CBLNu>(parameters, options, *this),
         WilsonScanComponent<components::WET::SBNuNu>(parameters, options, *this),
-        WilsonScanComponent<components::CBSU>(parameters, options, *this)
+        WilsonScanComponent<components::WET::CBSU>(parameters, options, *this)
     {
     }
 

@@ -266,8 +266,8 @@ namespace eos
     };
 
     template <>
-    class WilsonScanComponent<components::CBSU> :
-        public virtual ModelComponent<components::CBSU>
+    class WilsonScanComponent<components::WET::CBSU> :
+        public virtual ModelComponent<components::WET::CBSU>
     {
         protected:
             /* b->s c u Wilson coefficients */

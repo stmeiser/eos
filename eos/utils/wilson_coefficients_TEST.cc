@@ -205,8 +205,8 @@ class BernMvDTrafoTest :
 
                 std::array<complex<double>, 20> wc_MvD = wc.convertToMvD();
                 TEST_CHECK_RELATIVE_ERROR( std::real(wc_MvD[0]), +1198.000000, eps);
-                TEST_CHECK_RELATIVE_ERROR( std::real(wc_MvD[2]), -525.0000000, eps);
                 TEST_CHECK_RELATIVE_ERROR( std::real(wc_MvD[1]), -369.4444444, eps);
+                TEST_CHECK_RELATIVE_ERROR( std::real(wc_MvD[2]), -525.0000000, eps);
                 TEST_CHECK_RELATIVE_ERROR( std::real(wc_MvD[3]), +1452.222222, eps);
                 TEST_CHECK_RELATIVE_ERROR( std::real(wc_MvD[4]), +34.00000000, eps);
                 TEST_CHECK_RELATIVE_ERROR( std::real(wc_MvD[5]), +66.11111111, eps);
